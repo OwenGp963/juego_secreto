@@ -1,54 +1,61 @@
-function holaMundo(){
-    console.log('Hola, mundo');
+let numeroSecreto = 0;
+let numeroIntentos = 0; 
+let listaNumerosSorteados = [];  
+let numeroMaximo = 10;
+
+function asignarTextoElemento(elemento, texto){
+    let elementoHTML = document.querySelector(elemento);
+    elementoHTML.innerHTML = texto;   
 }
 
-function saludoUsuario(){
-    let nombre = prompt('Cual es tu nombre?: ');
-    console.log(`Hola, ${nombre}`);
-}
-
-function numeroDoble(){
-    let numero = parseInt(prompt('Digita un numero: '));
-    let resultado = numero*2; 
-    return resultado;
-}
-
-function numeroPromedio(){
-    let num1 = parseInt(prompt('Digita el 1er numero: '))
-    let num2 = parseInt(prompt('Digita el 2do numero: '))
-    let num3 = parseInt(prompt('Digita el 3er numero: '))
-
-    let resultado = (num1+num2+num3)/3
-
-    return Math.floor(resultado);
-}
-
-function numeroMayor(){
-    let num1 = parseInt(prompt('Digita el 1er numero: '))
-    let num2 = parseInt(prompt('Digita el 2do numero: '))
-    let resultado;
-
-    if(num1 < num2){
-        resultado = num2
-    }else if(num1 > num2){
-        resultado = num1
-    }else{
-        resultado = num1
+function verificarIntento(){
+    let numeroDeUsuario = parseInt(document.getElementById('valorUsuario').value);
+    console.log(numeroSecreto);
+    if (numeroDeUsuario === numeroSecreto){
+        asignarTextoElemento('p',`Felicidades Acertaste en ${numeroIntentos} ${(numeroIntentos === 1) ? 'vez' : 'veces'}`);
+        document.getElementById('reiniciar').removeAttribute('disabled');
+    } else{
+        if(numeroDeUsuario < numeroSecreto){
+                asignarTextoElemento('p','El numero secreto es mayor');
+            } else{
+                asignarTextoElemento('p','El numero secreto es menor'); 
+            } 
+            numeroIntentos++;
+            limpiarCaja();
     }
-  
-    return resultado;
+    return;
+}  
+
+function limpiarCaja(){
+    document.querySelector('#valorUsuario').value = '';
 }
 
-function numeroCuadrado(){
-    let num1 = parseInt(prompt('Digita un numero: '))
-    let resultado = num1*num1;
-  
-    return resultado;
+function condicionesIniciales(){
+    asignarTextoElemento('h1','Juego del numero secreto');
+    asignarTextoElemento('p',`Indica un numero del 1 al ${numeroMaximo}`);
+    numeroSecreto = generarNumeroSecreto();
+    numeroIntentos = 1;
+} 
+
+function reiniciarJuego(){
+    limpiarCaja();
+    condicionesIniciales();
+    document.querySelector('#reiniciar').setAttribute('disabled','true');
 }
 
-holaMundo();
-saludoUsuario();
-console.log(numeroDoble());
-console.log(numeroPromedio());
-console.log(`El numero mayor es: ${numeroMayor()}`);
-console.log(numeroCuadrado());
+function generarNumeroSecreto(){
+    let numeroSecreto = Math.floor((Math.random()*numeroMaximo)+1);
+
+    console.log(listaNumerosSorteados);
+
+    if(listaNumerosSorteados.length == numeroMaximo){
+        asignarTextoElemento('p','Ya se sorteron todos los numeros posibles')
+    }else if (listaNumerosSorteados.includes(numeroSecreto)){
+        generarNumeroSecreto();
+    } else {
+        listaNumerosSorteados.push(numeroSecreto)
+        return numeroSecreto;
+    }
+}
+
+condicionesIniciales();
